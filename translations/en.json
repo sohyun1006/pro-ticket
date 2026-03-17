@@ -1,0 +1,8 @@
+{
+  "app": {
+    "name": "Pro Tag Validator",
+    "short_description": "프로태그 등록 요청을 검증하고 구글 시트에 등록합니다.",
+    "long_description": "Zendesk 티켓으로 접수된 프로태그 등록 요청을 Leaguepedia를 통해 검증한 후 Google Sheets에 등록합니다.",
+    "installation_instructions": "1. n8n에서 Google Sheets 웹훅을 만드세요.\n2. 앱 설치 시 n8nSheetWebhookUrl에 웹훅 주소를 입력하세요."
+  }
+}

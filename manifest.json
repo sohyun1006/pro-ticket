@@ -1,0 +1,36 @@
+{
+  "name": "Pro Tag Validator",
+  "author": {
+    "name": "ProTicket",
+    "email": "admin@example.com"
+  },
+  "version": "1.0.0",
+  "frameworkVersion": "2.0",
+  "location": {
+    "support": {
+      "ticket_sidebar": {
+        "url": "assets/iframe.html",
+        "flexible": true
+      }
+    }
+  },
+  "domainWhitelist": [
+    "openrouter.ai"
+  ],
+  "parameters": [
+    {
+      "name": "openAiApiKey",
+      "type": "text",
+      "secure": false,
+      "required": true,
+      "description": "OpenAI API 키 (sk-...)"
+    },
+    {
+      "name": "n8nSheetWebhookUrl",
+      "type": "text",
+      "secure": false,
+      "required": false,
+      "description": "Google Sheets 업로드용 n8n 웹훅 URL (나중에 설정)"
+    }
+  ]
+}

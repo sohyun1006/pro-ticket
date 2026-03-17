@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pro Tag Validator</title>
+  <script src="https://static.zdassets.com/zendesk_app_framework_sdk/2.0/zaf_sdk.min.js"></script>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div id="app">
+    <div id="parse-section">
+      <h3 class="section-title">📋 프로태그 등록 요청</h3>
+      <div id="player-info" class="info-box hidden"></div>
+      <div id="parse-error" class="error-box hidden">
+        티켓에서 프로태그 등록 양식을 찾을 수 없습니다.<br/>
+        아래 필드명을 확인해주세요.
+      </div>
+    </div>
+
+    <div id="verify-section" class="hidden">
+      <button id="btn-verify" class="btn btn-primary">🔍 프로선수 검증하기</button>
+    </div>
+
+    <div id="result-section" class="hidden">
+      <div id="result-box"></div>
+      <button id="btn-register" class="btn btn-success hidden">✅ 구글 시트에 등록</button>
+      <div id="register-result" class="hidden"></div>
+    </div>
+
+    <div id="loading" class="hidden">
+      <div class="spinner"></div>
+      <p id="loading-text">검증 중...</p>
+    </div>
+  </div>
+
+  <script src="main.js"></script>
+</body>
+</html>
