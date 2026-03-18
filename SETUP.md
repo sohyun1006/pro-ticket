@@ -35,53 +35,55 @@ zcli apps:create
 
 ---
 
-## 3. n8n 워크플로우 설정 (Google Sheets 업로드)
+## 3. Google Sheets 연동 (Google Apps Script)
 
-### 워크플로우 구성
+n8n 없이 Google Apps Script를 이용해 무료로 웹훅을 만들 수 있습니다.
 
-```
-[Webhook 트리거]
-    ↓
-[Google Sheets - Append Row]
-```
+### Step 1 - Google Sheets 준비
 
-### 단계별 설정
+1. 등록 데이터를 저장할 Google Sheets 파일 열기
+2. 시트 탭 이름 확인 (기본값: `시트1`)
 
-**Step 1 - Webhook 노드**
-- Method: POST
-- Path: /pro-tag-register
-- 생성 후 웹훅 URL 복사 (앱 설치 시 입력)
+### Step 2 - Apps Script 배포
 
-**Step 2 - Google Sheets 노드**
-- Operation: Append or Update Row
-- Spreadsheet: 등록할 시트 선택
-- Sheet: 시트 탭 선택
-- Column 매핑:
+1. Google Sheets 상단 메뉴: **확장 프로그램 > Apps Script**
+2. 편집기에 `google-apps-script.js` 파일 내용 전체 붙여넣기
+3. 코드 상단의 `SHEET_NAME`을 실제 시트 탭 이름으로 수정
+4. 상단 **저장** (💾) 클릭
+5. **배포 > 새 배포** 클릭
+6. 설정:
+   - 유형: **웹 앱**
+   - 설명: `Pro Tag Validator 웹훅`
+   - 실행 계정: **나**
+   - 액세스 권한: **모든 사용자**
+7. **배포** 클릭 → 권한 허용
+8. 표시되는 **웹 앱 URL** 복사
 
-| 시트 컬럼 | n8n 필드 |
-|----------|---------|
-| 티켓ID | `{{ $json.ticketId }}` |
-| 접수일 | `{{ $json.verifiedAt }}` |
-| 본명 | `{{ $json.realName }}` |
-| 선수활동명 | `{{ $json.playerName }}` |
-| 라이엇ID | `{{ $json.riotId }}` |
-| 라인 | `{{ $json.line }}` |
-| 소속 팀 | `{{ $json.team }}` |
-| 서버 | `{{ $json.server }}` |
-| 리그 | `{{ $json.league }}` |
-| 상태 | `{{ $json.status }}` |
+### Step 3 - Zendesk 앱에 URL 입력
+
+- `zcli apps:server` 실행 시 또는 앱 설치 시
+- `webhookUrl` 항목에 복사한 Apps Script URL 붙여넣기
 
 ---
 
-## 4. 앱 설정값 입력
+## 4. Google Sheets 컬럼 구성
 
-Zendesk에서 앱 설치 시:
-- `n8nSheetWebhookUrl`: n8n에서 복사한 웹훅 URL
+Apps Script가 자동으로 헤더를 추가합니다. 수동으로 만들 경우:
+
+| 티켓ID | 접수일 | 본명 | 선수활동명 | 공식활동명 | 라이엇ID | 라인 | 소속 팀 | 서버 | 리그 | 출처 | 상태 |
+|--------|--------|------|-----------|-----------|---------|------|--------|------|------|------|------|
+| 12345  | 2024-01-15T... | 홍길동 | Faker | Faker | Faker#KR1 | 미드 | T1 | KR | LCK | https://... | 승인 |
 
 ---
 
-## 5. Google Sheets 컬럼 구성 예시
+## 5. 테스트 방법
 
-| 티켓ID | 접수일 | 본명 | 선수활동명 | 라이엇ID | 라인 | 소속 팀 | 서버 | 리그 | 상태 |
-|--------|--------|------|-----------|---------|------|--------|------|------|------|
-| 12345  | 2024-01-15 | 홍길동 | Faker | Faker#KR1 | 미드 | T1 | KR | LCK | 승인 |
+Apps Script 배포 후 터미널에서 아래 명령으로 동작 확인:
+
+```bash
+curl -X POST "YOUR_APPS_SCRIPT_URL" \
+  -H "Content-Type: application/json" \
+  -d '{"ticketId":"test-001","realName":"홍길동","playerName":"Faker","officialName":"Faker","riotId":"Faker#KR1","line":"미드","team":"T1","server":"KR","league":"LCK","verifiedAt":"2024-01-15T00:00:00Z","sources":"https://leaguepedia.com","status":"승인"}'
+```
+
+정상 응답: `{"success":true}`

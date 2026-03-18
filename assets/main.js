@@ -243,17 +243,8 @@ document.getElementById('btn-register').addEventListener('click', async () => {
 
   try {
     const settings = await client.metadata();
-    const webhookUrl = settings.settings?.n8nSheetWebhookUrl;
-
-    if (!webhookUrl) {
-      hideLoading();
-      const regResult = document.getElementById('register-result');
-      regResult.className = 'error-box';
-      regResult.innerHTML = '⚠️ 구글 시트 연동이 아직 설정되지 않았습니다.';
-      show('register-result');
-      show('btn-register');
-      return;
-    }
+    const webhookUrl = settings.settings?.n8nSheetWebhookUrl
+      || 'https://script.google.com/macros/s/AKfycbyhw5cEGtgoNbRSfOdlx23CqOZ2qWrLWBLB0b5vNdgBOHgKPutQB8miY9haHGvFM0zG/exec';
 
     await client.request({
       url: webhookUrl,
@@ -295,7 +286,8 @@ document.getElementById('btn-register').addEventListener('click', async () => {
     show('btn-register');
     const regResult = document.getElementById('register-result');
     regResult.className = 'error-box';
-    regResult.innerHTML = `등록 실패: ${err.message}`;
+    const errDetail = err?.responseText || err?.message || JSON.stringify(err) || '알 수 없는 오류';
+    regResult.innerHTML = `등록 실패 (${err?.status || ''}): ${errDetail}`;
     show('register-result');
   }
 });

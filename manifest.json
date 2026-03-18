@@ -15,7 +15,9 @@
     }
   },
   "domainWhitelist": [
-    "openrouter.ai"
+    "openrouter.ai",
+    "script.google.com",
+    "script.googleusercontent.com"
   ],
   "parameters": [
     {
@@ -24,13 +26,6 @@
       "secure": false,
       "required": true,
       "description": "OpenAI API 키 (sk-...)"
-    },
-    {
-      "name": "n8nSheetWebhookUrl",
-      "type": "text",
-      "secure": false,
-      "required": false,
-      "description": "Google Sheets 업로드용 n8n 웹훅 URL (나중에 설정)"
     }
   ]
 }
