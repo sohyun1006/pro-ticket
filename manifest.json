@@ -1,5 +1,6 @@
 {
   "name": "Pro Tag Validator",
+  "defaultLocale": "en",
   "author": {
     "name": "ProTicket",
     "email": "admin@example.com"

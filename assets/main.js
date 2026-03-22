@@ -93,6 +93,8 @@ function renderPlayerInfo(p) {
 // ─── 검증 버튼 (OpenAI 교차검증) ────────────────────────────────────────────
 
 document.getElementById('btn-verify').addEventListener('click', async () => {
+  parsedPlayer.requestType = document.getElementById('request-type').value;
+
   hide('verify-section');
   hide('result-section');
   showLoading('AI 교차검증 중... (나무위키, Leaguepedia, DeepLoL 확인 중)');
@@ -205,6 +207,7 @@ function renderVerifyResult(result) {
       verificationLogic: result.verification_logic,
       sources: result.sources || [],
       verifiedAt: new Date().toISOString(),
+      requestType: parsedPlayer.requestType,
     };
 
     const sourcesHtml = (result.sources || [])
@@ -252,6 +255,7 @@ document.getElementById('btn-register').addEventListener('click', async () => {
       contentType: 'application/json',
       data: JSON.stringify({
         ticketId: verifiedData.ticketId,
+        requestType: verifiedData.requestType,
         line: verifiedData.line,
         realName: verifiedData.realName,
         playerName: verifiedData.playerName,
@@ -274,9 +278,15 @@ document.getElementById('btn-register').addEventListener('click', async () => {
 
     // 티켓에 태그 추가
     try {
+      const tagMap = {
+        '신규 등록': 'pro_verified',
+        '소속팀 변경': 'pro_updated',
+        '프로 태그 삭제': 'pro_tag_removed',
+      };
+      const tag = tagMap[verifiedData.requestType] || 'pro_verified';
       const tagData = await client.get('ticket.tags');
       const currentTags = tagData['ticket.tags'] || [];
-      await client.set('ticket.tags', [...currentTags, 'pro_verified']);
+      await client.set('ticket.tags', [...currentTags, tag]);
     } catch (tagErr) {
       console.warn('태그 추가 실패:', tagErr);
     }
