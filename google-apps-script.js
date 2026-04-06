@@ -89,10 +89,10 @@ function checkAndNotify() {
   const allRows = sheet.getDataRange().getValues();
   const rows = allRows.slice(1); // 헤더 제외
 
-  // 오늘 접수된 행만 필터링
+  // 오늘 접수된 행만 필터링 (접수일 = J열 = index 9)
   const todayRows = rows.filter(row => {
-    if (!row[1]) return false;
-    const rowDate = Utilities.formatDate(new Date(row[1]), 'Asia/Seoul', 'yyyy-MM-dd');
+    if (!row[9]) return false;
+    const rowDate = Utilities.formatDate(new Date(row[9]), 'Asia/Seoul', 'yyyy-MM-dd');
     return rowDate === today;
   });
 
